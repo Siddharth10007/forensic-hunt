@@ -1,0 +1,76 @@
+body{
+  margin:0;
+  font-family:Consolas, monospace;
+  background:#020617;
+  color:#22c55e;
+}
+
+/* MAIN LAYOUT */
+.console{
+  display:flex;
+  height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:#020617;
+  border-right:1px solid #22c55e44;
+  padding:20px;
+}
+
+.sidebar button{
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  background:black;
+  border:1px solid #22c55e55;
+  color:#22c55e;
+  cursor:pointer;
+}
+
+.sidebar button:hover{
+  background:#052e16;
+}
+
+/* MAIN AREA */
+.main{
+  flex:1;
+  padding:20px;
+}
+
+.tab{
+  display:none;
+}
+
+pre{
+  background:black;
+  border:1px solid #22c55e44;
+  padding:15px;
+  height:300px;
+  overflow:auto;
+}
+
+/* INPUTS */
+input,select{
+  background:black;
+  border:1px solid #22c55e55;
+  color:#22c55e;
+  padding:10px;
+}
+
+button{
+  background:#052e16;
+  border:1px solid #22c55e55;
+  color:#22c55e;
+}
+
+/* STATUS BAR */
+.statusbar{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:black;
+  padding:10px;
+  border-top:1px solid #22c55e44;
+}

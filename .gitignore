@@ -1,0 +1,42 @@
+# =========================
+# Node.js
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.old
+
+# Environment variables (IMPORTANT - don't upload secrets)
+.env
+.env.*
+
+# Logs
+logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor folders
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build / cache folders
+dist/
+build/
+.cache/
+
+# Optional: Ignore coverage reports
+coverage/
+
+# =========================
+# Keep these INCLUDED
+# =========================
+# Your HTML, CSS, JS, JSON, server.js WILL be pushed

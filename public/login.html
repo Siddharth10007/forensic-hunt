@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Murder Hunt Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="center">
+
+<div class="card">
+  <h2>🕵️ Digital Forensics Hunt</h2>
+  <input id="teamName" placeholder="Enter Team Name">
+  <button onclick="login()">Enter Investigation</button>
+</div>
+
+<script>
+async function login(){
+   const team = document.getElementById("teamName").value.trim();
+   if(!team) return alert("Enter team name");
+
+   const res = await fetch("/login",{
+      method:"POST",
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({team})
+   });
+
+   const data = await res.json();
+
+   if(data.success){
+      localStorage.setItem("team",team);
+      window.location="dashboard.html";
+   }
+}
+</script>
+
+</body>
+</html>
