@@ -2,19 +2,46 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Murder Hunt Login</title>
+<title>CloudZilla Investigation Login</title>
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="center">
 
-<div class="card">
-  <h2>🕵️ Digital Forensics Hunt</h2>
-  <input id="teamName" placeholder="Enter Team Name">
-  <button onclick="login()">Enter Investigation</button>
+<body class="login-body">
+
+<div class="login-container">
+
+  <h1 class="login-title">
+  <span class="icon">🕵️</span> Digital Forensics Hunt
+</h1>
+
+
+  <div class="briefing">
+
+    <h3>CASE FILE: CEO INCIDENT — ACTIVE INVESTIGATION</h3>
+
+    <div id="typedBriefing">
+
+  <p class="type-line"></p>
+  <p class="type-line"></p>
+  <p class="type-line objective"></p>
+
+</div>
+
+
+
+  </div>
+
+  <div class="login-box hidden-access">
+
+    <input id="teamName" placeholder="Enter Team Name">
+    <button onclick="login()">Enter Investigation</button>
+  </div>
+
 </div>
 
 <script>
 async function login(){
+
    const team = document.getElementById("teamName").value.trim();
    if(!team) return alert("Enter team name");
 
@@ -27,11 +54,67 @@ async function login(){
    const data = await res.json();
 
    if(data.success){
-      localStorage.setItem("team",team);
+
+   localStorage.setItem("team",team);
+   localStorage.setItem("breachTransition","true");
+
+   const fx = document.getElementById("breachFX");
+
+   // trigger glitch visuals
+   fx.classList.add("breach-active");
+   document.body.classList.add("breach-shake");
+
+   // optional dramatic delay before entering system
+   setTimeout(()=>{
       window.location="dashboard.html";
-   }
+   },600);
+   
 }
+
+}
+
+const briefingLines = [
+`Late last night, the CEO of CloudZilla was found unresponsive inside company premises.
+Internal security systems reported multiple anomalies, altered activity logs,
+and suspicious device connections across the network.`,
+
+`Multiple individuals had motive. Several everyday office tools could have been used
+as a weapon. The exact location of the incident remains unclear.`,
+
+`🎯 OBJECTIVE:
+Identify the Murderer, the Weapon Used, the Location, and the Motive.
+Every discovery is tracked. Proceed carefully, Investigator.`
+];
+
+const paragraphs = document.querySelectorAll("#typedBriefing .type-line");
+
+async function typeParagraph(el, text, speed=18){
+  for(let i=0;i<text.length;i++){
+    el.textContent += text[i];
+    await new Promise(r=>setTimeout(r,speed));
+  }
+}
+
+async function startTyping(){
+
+  for(let i=0;i<briefingLines.length;i++){
+    await typeParagraph(paragraphs[i], briefingLines[i]);
+    await new Promise(r=>setTimeout(r,300));
+  }
+
+  // 🚪 ACCESS GRANTED REVEAL
+  const loginBox = document.querySelector(".login-box");
+  loginBox.classList.remove("hidden-access");
+  loginBox.classList.add("show-access");
+}
+
+
+
+
+setTimeout(startTyping,400);
+
 </script>
+<div id="breachFX"></div>
 
 </body>
 </html>

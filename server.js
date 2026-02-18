@@ -14,6 +14,33 @@ app.use(express.static(path.join(__dirname, "public")));
 const PORT = 3000;
 
 // ===============================
+// 🧠 GOD MODE STATE
+// ===============================
+
+function getStage(team){
+
+  const solved = Object.values(teams[team].discoveries)
+    .filter(v=>v!==null).length;
+
+  return solved; // stage 0 → 4
+}
+
+// ===============================
+// 🕒 FORMAT READABLE TIME
+// ===============================
+
+function getReadableTime(){
+  const now = new Date();
+
+  const date = now.toLocaleDateString("en-GB"); // DD/MM/YYYY
+  const time = now.toLocaleTimeString("en-GB"); // HH:MM:SS
+
+  return `${date} ${time}`;
+}
+
+
+
+// ===============================
 // 📂 LOAD STORIES
 // ===============================
 
@@ -60,7 +87,9 @@ app.post("/login", (req, res) => {
 
     teams[team] = {
       storyId: storyIndex,
-      loginTime: Date.now(),
+      loginTime: getReadableTime(),
+      score: 0,
+      finishTime: null,
       discoveries: {
         murderer: null,
         weapon: null,
@@ -95,9 +124,24 @@ app.post("/submit", (req, res) => {
   const isCorrect = userAnswer === correctAnswer;
 
   if (isCorrect && !teams[team].discoveries[category]) {
-    teams[team].discoveries[category] = Date.now();
-    saveProgress();
+
+  // save readable timestamp
+  teams[team].discoveries[category] = getReadableTime();
+
+  // update score
+  const solvedCount = Object.values(teams[team].discoveries)
+    .filter(v=>v!==null).length;
+
+  teams[team].score = solvedCount * 25;
+
+  // if all clues solved → set finish time once
+  if(solvedCount === 4 && !teams[team].finishTime){
+    teams[team].finishTime = getReadableTime();
   }
+
+  saveProgress();
+}
+
 
   res.json({ correct: isCorrect });
 });
@@ -140,6 +184,110 @@ app.get("/leaderboard", (req, res) => {
 });
 
 // ===============================
+// 📂 DYNAMIC FORENSIC FILE
+// ===============================
+
+app.get("/forensics/:team/:file",(req,res)=>{
+
+  const {team,file} = req.params;
+
+  if(!teams[team]) return res.send("");
+
+  const story = stories[teams[team].storyId];
+  const stage = getStage(team);
+
+  let output="";
+
+  if(file==="network"){
+
+    output=`
+NETWORK TRACE REPORT
+
+IP anomaly detected...
+Device linked to: ${stage>=1 ? story.weapon : "UNKNOWN"}
+
+<!-- weapon = ${story.weapon} -->
+`;
+
+  }
+
+  if(file==="mail"){
+
+    output=`
+MAIL SERVER BACKUP
+
+CEO complaints archived.
+
+${stage>=2 ? story.motive : "ENCRYPTED DATA"}
+
+<!-- motive = ${story.motive} -->
+`;
+
+  }
+
+  if(file==="accesslog"){
+
+    output=`
+ACCESS CONTROL LOG
+
+Entry point: ${stage>=3 ? story.location : "REDACTED"}
+
+<!-- location = ${story.location} -->
+`;
+  }
+
+  res.type("text/plain").send(output);
+});
+
+app.get("/achievement/:team",(req,res)=>{
+
+  const stage = getStage(req.params.team);
+
+  const titles=[
+    "Rookie Analyst",
+    "Packet Inspector",
+    "Digital Sleuth",
+    "Cyber Hunter",
+    "Forensics Master"
+  ];
+
+  res.json({
+    title: titles[stage]
+  });
+});
+
+// ===============================
+// 🏁 CHECK FINISH STATUS
+// ===============================
+
+app.get("/finish/:team",(req,res)=>{
+
+  const team = req.params.team;
+  if(!teams[team]) return res.json({done:false});
+
+  const solved = Object.values(teams[team].discoveries)
+    .filter(v=>v!==null).length;
+
+  res.json({
+    done: solved===4
+  });
+});
+
+app.get("/networkmap/:team",(req,res)=>{
+
+  const nodes = [
+    "[SERVER]",
+    "[MAIL]",
+    "[FIREWALL]",
+    "[CEO-LAPTOP]",
+    "[UNKNOWN DEVICE]"
+  ];
+
+  res.json(nodes);
+});
+
+
+// ===============================
 // 🔍 DEBUG ROUTE (OPTIONAL)
 // shows assigned story (REMOVE IN EVENT)
 // ===============================
@@ -149,6 +297,28 @@ app.get("/debug/:team", (req,res)=>{
   if(!teams[team]) return res.json({});
   res.json(stories[teams[team].storyId]);
 });
+
+// ===============================
+// 🎯 GET TEAM STORY DATA (SAFE)
+// ===============================
+
+app.get("/team-data/:team",(req,res)=>{
+
+  const team = req.params.team;
+
+  if(!teams[team]){
+    return res.json({});
+  }
+
+  const story = stories[teams[team].storyId];
+
+  // send only hint text (not full answers)
+  res.json({
+    hintEmail: story.motive,
+    hintLog: story.location
+  });
+});
+
 
 // ===============================
 // 🚀 START SERVER

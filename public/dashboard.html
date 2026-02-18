@@ -2,67 +2,31 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Investigation Console</title>
+<title>Forensics Terminal</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="screenfx"></div>
 
-<div class="console">
+<canvas id="matrix"></canvas>
 
-  <!-- LEFT PANEL -->
-  <div class="sidebar">
-    <h2>🕵️ Console</h2>
 
-    <button onclick="openTab('evidence')">📁 Evidence</button>
-    <button onclick="openTab('logs')">📄 Logs</button>
-    <button onclick="openTab('submit')">🎯 Submit</button>
+<div class="terminal">
+  <canvas id="radar"></canvas>
 
-    <hr>
-    <p id="teamDisplay"></p>
+  <div id="livefeed"></div>
+  <div id="output"></div>
+  Welcome Investigator...
+
+  Type "help" to see available commands.
+  <div class="inputline">
+    <span>&gt;</span>
+    <input id="cmd" autocomplete="off" onkeydown="handleCommand(event)">
+    <span class="caret"></span>
   </div>
-
-  <!-- RIGHT PANEL -->
-  <div class="main">
-
-    <div id="evidence" class="tab">
-      <h3>Evidence Files</h3>
-
-      <button onclick="loadFile('email1.txt')">Open Email</button>
-      <button onclick="loadFile('chatlog.png')">Open Chatlog</button>
-      <button onclick="rickroll()">Decrypt File 😈</button>
-    </div>
-
-    <div id="logs" class="tab">
-      <h3>System Logs</h3>
-
-<pre id="viewer">
-[BOOT SEQUENCE INITIATED]
-Access level: Investigator
-Hint: <!-- weapon = Heavy mechanical keyboard -->
-</pre>
-    </div>
-
-    <div id="submit" class="tab">
-      <h3>Submit Discovery</h3>
-
-      <select id="category">
-        <option value="murderer">Murderer</option>
-        <option value="weapon">Weapon</option>
-        <option value="location">Location</option>
-        <option value="motive">Motive</option>
-      </select>
-
-      <input id="answer" placeholder="Enter answer">
-
-      <button onclick="submitAnswer()">Submit</button>
-    </div>
-
-  </div>
-
 </div>
 
-<div class="statusbar">
-  <span id="result">Awaiting input...</span>
+
 </div>
 
 <script src="script.js"></script>
