@@ -319,6 +319,32 @@ app.get("/team-data/:team",(req,res)=>{
   });
 });
 
+// ===============================
+// 👑 ADMIN LIVE MONITOR (SAFE)
+// ===============================
+
+app.get("/admin-progress",(req,res)=>{
+
+  const summary = Object.keys(teams).map(team=>{
+
+    const data = teams[team];
+
+    const solvedCount = Object.values(data.discoveries)
+      .filter(v=>v!==null).length;
+
+    return {
+      team,
+      storyId: data.storyId,
+      loginTime: data.loginTime,
+      score: data.score || solvedCount*25,
+      finishTime: data.finishTime || null,
+      discoveries: data.discoveries
+    };
+  });
+
+  res.json(summary);
+});
+
 
 // ===============================
 // 🚀 START SERVER

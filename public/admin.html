@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CloudZilla Admin Monitor</title>
+
+<style>
+body{
+  background:black;
+  color:#22c55e;
+  font-family:Consolas,monospace;
+  padding:20px;
+}
+
+h2{
+  text-shadow:0 0 10px #22c55e55;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+th,td{
+  border:1px solid #22c55e33;
+  padding:10px;
+  text-align:left;
+}
+
+th{
+  background:#052e16;
+}
+
+.finished{
+  background:#064e3b;
+}
+
+.updating{
+  opacity:0.6;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🕵️ CloudZilla Live Investigation Monitor</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Team</th>
+  <th>Score</th>
+  <th>Murderer</th>
+  <th>Weapon</th>
+  <th>Location</th>
+  <th>Motive</th>
+  <th>Finish Time</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+</table>
+
+<script>
+
+const body = document.getElementById("tableBody");
+
+// ======================
+// 🔄 FETCH LIVE DATA
+// ======================
+
+async function loadData(){
+
+  body.classList.add("updating");
+
+  try{
+
+    const res = await fetch("/admin-progress");
+    const data = await res.json();
+
+    body.innerHTML="";
+
+    // ======================
+    // 🏆 LIVE LEADERBOARD SORT
+    // ======================
+
+    data.sort((a,b)=>{
+
+  // 1️⃣ higher score first
+  if(b.score !== a.score){
+    return b.score - a.score;
+  }
+
+  // 2️⃣ if both finished → faster finish wins
+  if(a.finishTime && b.finishTime){
+    return new Date(a.finishTime) - new Date(b.finishTime);
+  }
+
+  // 3️⃣ finished teams above unfinished
+  if(a.finishTime) return -1;
+  if(b.finishTime) return 1;
+
+  // 4️⃣ SAME SCORE + NOT FINISHED
+  // compare latest discovery time
+
+  const lastA = Math.max(
+    ...Object.values(a.discoveries)
+      .filter(v=>v)
+      .map(v=>new Date(v))
+  ) || 0;
+
+  const lastB = Math.max(
+    ...Object.values(b.discoveries)
+      .filter(v=>v)
+      .map(v=>new Date(v))
+  ) || 0;
+
+  return lastA - lastB;
+});
+
+    // rebuild table
+    data.forEach((team,index)=>{
+
+      const row = document.createElement("tr");
+
+      if(team.finishTime){
+        row.classList.add("finished");
+      }
+
+      row.innerHTML = `
+        <td>#${index+1} — ${team.team}</td>
+        <td>${team.score}</td>
+        <td>${team.discoveries.murderer || "-"}</td>
+        <td>${team.discoveries.weapon || "-"}</td>
+        <td>${team.discoveries.location || "-"}</td>
+        <td>${team.discoveries.motive || "-"}</td>
+        <td>${team.finishTime || "-"}</td>
+      `;
+
+      body.appendChild(row);
+    });
+
+  }catch(err){
+    console.log("Monitor error",err);
+  }
+
+  body.classList.remove("updating");
+}
+
+// initial load
+loadData();
+
+// auto refresh every 3 seconds
+setInterval(loadData,3000);
+
+</script>
+
+</body>
+</html>
