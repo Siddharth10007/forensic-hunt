@@ -6,9 +6,57 @@
     "motive": "CEO forced everyone to use Internet Explorer"
   },
   {
-    "murderer": "Janitor",
+    "murderer": "Director",
+    "weapon": "Modified USB Knife",
+    "location": "Conference Room",
+    "motive": "CEO parked their luxury car diagonally across three employee parking spots every morning."
+  },
+  {
+    "murderer": "HR Manager",
     "weapon": "Poisoned coffee mug",
     "location": "Cafeteria",
     "motive": "CEO enforced light mode only across all company tools"
+  },
+  {
+    "murderer": "Business Partner",
+    "weapon": "Overheated gaming laptop charger",
+    "location": "Parking Lot",
+    "motive": "The CEO ate the employee's clearly labeled lunch from the refrigerator."
+  },
+  {
+    "murderer": "Intern",
+    "weapon": "Modified USB Knife",
+    "location": "Parking Lot",
+    "motive": "CEO enforced light mode only across all company tools"
+  },
+  {
+    "murderer": "Director",
+    "weapon": "Heavy mechanical keyboard",
+    "location": "Conference Room",
+    "motive": "CEO forced everyone to use Internet Explorer"
+  },
+  {
+    "murderer": "HR Manager",
+    "weapon": "Overheated gaming laptop charger",
+    "location": "Server Room",
+    "motive": "CEO parked their luxury car diagonally across three employee parking spots every morning."
+  },
+  {
+    "murderer": "Business Partner",
+    "weapon": "Poisoned coffee mug",
+    "location": "Cafeteria",
+    "motive": "CEO enforced light mode only across all company tools"
+  },
+  {
+    "murderer": "Director",
+    "weapon": "Modified USB Knife",
+    "location": "Server Room",
+    "motive": "The CEO ate the employee's clearly labeled lunch from the refrigerator."
+  },
+  {
+    "murderer": "Intern",
+    "weapon": "Overheated gaming laptop charger",
+    "location": "Conference Room",
+    "motive": "CEO forced everyone to use Internet Explorer"
   }
 ]

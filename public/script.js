@@ -317,9 +317,9 @@ async function parseCommand(cmd){
 COMMANDS:
 
 scan network
+read accesslog
 network map
 open mail
-read accesslog
 ai assist
 leaderboard
 submit [category] [answer]
@@ -336,6 +336,9 @@ submit [category] [answer]
 
     nodes.forEach(n=>print(" ├─ "+n));
   }
+  else if(cmd==="download fragment"){
+   window.open(`/download/${team}/fragment`);
+}
 
   // 📂 DYNAMIC FILES (FROM GOD MODE)
   else if(cmd==="scan network"){
@@ -343,12 +346,72 @@ submit [category] [answer]
     const r = await fetch(`/forensics/${team}/network`);
     await typePrint(await r.text());
   }
+  else if(["server","conf","cafe","lot","unknown"].includes(cmd)){
 
-  else if(cmd==="open mail"){
-    await progress("ACCESSING MAIL ARCHIVE");
-    const r = await fetch(`/forensics/${team}/mail`);
-    await typePrint(await r.text());
-  }
+ if(cmd==="unknown"){
+   window.open("https://www.youtube.com/watch?v=fC7oUOUEEi4");
+   return;
+ }
+
+ const res = await fetch(`/location/${team}/${cmd}`);
+ const text = await res.text();
+
+ print(text);
+}
+
+
+
+  // ======================
+// 📧 MOTIVE COMMANDS (UPDATED)
+// ======================
+
+else if(cmd==="open mail"){
+ await progress("ACCESSING MAIL ARCHIVE");
+ const res = await fetch(`/mail/${team}/start`);
+ print(await res.text());
+}
+
+else if(cmd==="lizard"){
+ const res = await fetch(`/mail/${team}/lizard`);
+ print(await res.text());
+}
+
+else if(cmd==="monster"){
+ const res = await fetch(`/mail/${team}/monster`);
+ print(await res.text());
+}
+
+else if(cmd==="ceo"){
+ const res = await fetch(`/mail/${team}/ceo`);
+ print(await res.text());
+}
+
+else if(cmd==="king kong"){
+ const res = await fetch(`/mail/${team}/kingkong`);
+ print(await res.text());
+}
+
+else if(cmd==="image"){
+ window.open("https://i.pinimg.com/474x/7b/67/09/7b67097f2be633efd643ab7dec032d4b.jpg");
+}
+
+else if(cmd==="hex_scan"){
+ window.open("https://www.youtube.com/watch?v=ZhFVt5uPdW0");
+}
+
+else if(cmd==="site"){
+ window.open("https://cloudzilla-nmit.vercel.app/");
+}
+
+else if(cmd==="25"){
+ print(`
+AI ANALYSIS:
+Sum confirmed: 55
+Adjusted value: 25
+Archive node unclear.
+`);
+window.open("https://www.youtube.com/watch?v=YbaTur4A1OU");
+}
 
   else if(cmd==="read accesslog"){
     await progress("FETCHING ACCESS LOG");
@@ -358,8 +421,15 @@ submit [category] [answer]
 
   // 🤖 AI ASSIST
   else if(cmd==="ai assist"){
-    await glitch("AI ANALYZING THREAT PATTERNS...");
-  }
+
+ const hints=[
+  "Badge correlation unstable...",
+  "Director flagged as suspicious.",
+  "Peripheral device anomaly detected."
+ ];
+
+ await glitch("[AI] "+hints[Math.floor(Math.random()*hints.length)]);
+}
 
   // 🏆 LEADERBOARD
   else if(cmd==="leaderboard"){
