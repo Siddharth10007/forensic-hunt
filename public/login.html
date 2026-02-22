@@ -74,11 +74,15 @@ async function login(){
 }
 
 const briefingLines = [
-`Late last night, the CEO of CloudZilla was found unresponsive inside company premises. Internal security systems reported multiple anomalies, altered activity logs,
-and suspicious device connections across the network.`,
+`Late last night, the CEO of CloudZilla was found unresponsive inside company premises. Internal security systems reported multiple anomalies, altered activity logs, and suspicious device connections across the network.`,
 `Multiple individuals had motive. Several everyday office tools could have been used as a weapon. The exact location of the incident remains unclear.`,
 `🎯 OBJECTIVE:
-Identify the Murderer, the Weapon Used, the Location, and the Motive.
+Identify the following matters of interest regarding the case(categories):
+ -Weapon
+ -Location
+ -Motive
+ -Murderer
+For each one found, 25 points are awarded, an incorrect guess can cost you 2 points.
 Every discovery is tracked. Proceed carefully, Investigator.`
 ];
 
@@ -87,6 +91,7 @@ const paragraphs = document.querySelectorAll("#typedBriefing .type-line");
 async function typeParagraph(el, text, speed=18){
   for(let i=0;i<text.length;i++){
     el.textContent += text[i];
+    el.scrollTop = el.scrollHeight;
     await new Promise(r=>setTimeout(r,speed));
   }
 }
@@ -97,6 +102,13 @@ async function startTyping(){
     await typeParagraph(paragraphs[i], briefingLines[i]);
     await new Promise(r=>setTimeout(r,300));
   }
+
+  // 🎯 PRESS ENTER TO LOGIN
+document.getElementById("teamName").addEventListener("keydown", function(e){
+   if(e.key === "Enter"){
+      login();
+   }
+});
 
   // 🚪 ACCESS GRANTED REVEAL
   const loginBox = document.querySelector(".login-box");

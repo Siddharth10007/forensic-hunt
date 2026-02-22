@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // ===============================
 // 🧠 GOD MODE STATE
@@ -89,6 +89,7 @@ app.post("/login", (req, res) => {
       storyId: storyIndex,
       loginTime: getReadableTime(),
       score: 0,
+      penalty: 0,
       finishTime: null,
       discoveries: {
         murderer: null,
@@ -117,35 +118,38 @@ app.post("/submit", (req, res) => {
 
   const story = stories[teams[team].storyId];
 
-  // normalize for easier matching
   const userAnswer = answer.toLowerCase().trim();
   const correctAnswer = story[category].toLowerCase();
 
   const isCorrect = userAnswer === correctAnswer;
 
+  // ✅ CORRECT ANSWER
   if (isCorrect && !teams[team].discoveries[category]) {
 
-  // save readable timestamp
-  teams[team].discoveries[category] = getReadableTime();
+    teams[team].discoveries[category] = getReadableTime();
 
-  // update score
+  }
+
+  // ❌ WRONG ANSWER → APPLY PENALTY
+  if(!isCorrect){
+    teams[team].penalty = (teams[team].penalty || 0) + 2;
+  }
+
+  // 🔄 UPDATE SCORE (ALWAYS RECALCULATE)
   const solvedCount = Object.values(teams[team].discoveries)
     .filter(v=>v!==null).length;
 
-  teams[team].score = solvedCount * 25;
+  teams[team].score = (solvedCount * 25) - (teams[team].penalty || 0);
 
-  // if all clues solved → set finish time once
+  // 🏁 FINISH TIME
   if(solvedCount === 4 && !teams[team].finishTime){
     teams[team].finishTime = getReadableTime();
   }
 
   saveProgress();
-}
-
 
   res.json({ correct: isCorrect });
 });
-
 // ===============================
 // 🏁 LEADERBOARD ROUTE
 // ===============================
@@ -159,7 +163,7 @@ app.get("/leaderboard", (req, res) => {
     const solvedCount = Object.values(data.discoveries)
       .filter(v => v !== null).length;
 
-    const totalScore = solvedCount * 25;
+    const totalScore = data.score || (solvedCount * 25);
 
     // finish time = latest timestamp
     const times = Object.values(data.discoveries).filter(v => v);
@@ -494,6 +498,93 @@ Investigation Node Complete.
  }
 
  res.type("text/plain").send(output);
+
+});
+
+// ===============================
+// 🔒 MURDERER LOCK SYSTEM (STORY VERSION)
+// ===============================
+
+app.get("/murderer/:team",(req,res)=>{
+
+ const {team} = req.params;
+ if(!teams[team]) return res.send("");
+
+ const d = teams[team].discoveries;
+
+ let solved = 0;
+ if(d.weapon) solved++;
+ if(d.location) solved++;
+ if(d.motive) solved++;
+
+ // 🔒 LOCKED
+ if(solved < 3){
+   return res.type("text/plain").send(`
+IDENTITY TRACE LOCKED
+
+Progress: ${solved}/3 Clues Completed
+
+Uncover Weapon, Location, and Motive first.
+`);
+ }
+
+ // 🔓 UNLOCKED — DRAMATIC STORY TEXT
+ return res.type("text/plain").send(`
+IDENTITY TRACE — FINAL RECONSTRUCTION
+
+The murderer was exceptional when it came to decoding.
+Among all ciphers, morse code was their favourite.
+
+They were also known for perfectly redacting sensitive content…
+██████████████████
+
+Unfortunately for them, one mistake remained.
+Their identity was captured inside an old audio log recovered from company servers.
+
+Download the forensic artifact and analyse it carefully.
+
+Type:
+caught
+`);
+});
+
+// ===============================
+// 🖼️ MURDERER IMAGE DOWNLOAD
+// ===============================
+
+app.get("/download-murderer/:team",(req,res)=>{
+
+ const filePath = path.join(__dirname,"data","assets","identity_trace.jpg");
+ res.download(filePath);
+
+});
+
+// ===============================
+// 🎧 FINAL AUDIO EVIDENCE (DYNAMIC)
+// ===============================
+
+app.get("/caught/:team",(req,res)=>{
+
+ const {team} = req.params;
+
+ if(!teams[team]) return res.send("");
+
+ const story = stories[teams[team].storyId];
+
+ // normalize murderer name
+ let killer = story.murderer.toLowerCase();
+
+ // map names to audio files
+ let fileName = "";
+
+ if(killer.includes("intern")) fileName = "int.wav";
+ else if(killer.includes("director")) fileName = "dir.wav";
+ else if(killer.includes("manager")) fileName = "man.wav";
+ else if(killer.includes("partner")) fileName = "part.wav";
+
+ const filePath = path.join(__dirname,"data","assets",fileName);
+
+ res.download(filePath);
 
 });
 

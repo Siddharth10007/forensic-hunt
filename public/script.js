@@ -322,6 +322,7 @@ network map
 open mail
 ai assist
 leaderboard
+murderer
 submit [category] [answer]
 `);
   }
@@ -359,6 +360,47 @@ submit [category] [answer]
  print(text);
 }
 
+// ======================
+// 🔒 MURDERER FINAL STAGE
+// ======================
+
+else if(cmd==="murderer"){
+
+  try{
+
+    const res = await fetch(`/murderer/${team}`);
+    const text = await res.text();
+
+    // print dramatic story text first
+    print(text);
+
+    // if unlocked, trigger image download
+    if(!text.includes("LOCKED")){
+      window.open(`/download-murderer/${team}`);
+    }
+
+  }catch(err){
+    print("Error accessing identity trace.");
+    console.log(err);
+  }
+
+}
+
+// ======================
+// 🎧 FINAL AUDIO COMMAND
+// ======================
+
+else if(cmd==="caught"){
+
+  try{
+    window.open(`/caught/${team}`);
+    print("Downloading recovered audio log...");
+  }catch(err){
+    print("Audio log unavailable.");
+    console.log(err);
+  }
+
+}
 
 
   // ======================
