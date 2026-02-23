@@ -357,3 +357,12 @@ body.breach-shake{
   75%{transform:translateX(-4px);}
   100%{transform:translateX(0);}
 }
+
+
+.timer-ui{
+  position:fixed;
+  top:10px;
+  left:50%;
+  color:#00ffcc;
+  font-weight:bold;
+}

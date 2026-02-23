@@ -8,6 +8,49 @@ const output = document.getElementById("output");
 const input = document.getElementById("cmd");
 
 // ======================
+// ⏱ LIVE EVENT TIMER
+// ======================
+
+async function startEventTimer(){
+
+  async function update(){
+
+    try{
+
+      const res = await fetch(`/timer/${team}`);
+      const data = await res.json();
+
+      if(data.expired){
+        alert("⏰ Time Over — Investigation Closed.");
+        localStorage.removeItem("team");
+        window.location="login.html";
+        return;
+      }
+
+      const ms = data.remaining;
+
+      const minutes = Math.floor(ms/60000);
+      const seconds = Math.floor((ms%60000)/1000);
+
+      const timerEl = document.getElementById("eventTimer");
+      if(timerEl){
+        timerEl.textContent =
+          `⏱ ${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+      }
+
+    }catch(err){
+      console.log("Timer error",err);
+    }
+
+  }
+
+  update();
+  setInterval(update,1000);
+}
+
+startEventTimer();
+
+// ======================
 // ⚡ REACTIVE EFFECTS
 // ======================
 
@@ -314,7 +357,7 @@ async function parseCommand(cmd){
 
   if(main==="help"){
     await typePrint(`
-COMMANDS:
+COMMANDS (try to use them in order to recieve the most relevant evidence):
 
 scan network
 read accesslog
@@ -434,7 +477,7 @@ else if(cmd==="king kong"){
 }
 
 else if(cmd==="image"){
- window.open("https://i.pinimg.com/474x/7b/67/09/7b67097f2be633efd643ab7dec032d4b.jpg");
+ window.open("https://m.media-amazon.com/images/I/519WNV4tl4L._AC_SY300_SX300_QL70_FMwebp_.jpg");
 }
 
 else if(cmd==="hex_scan"){

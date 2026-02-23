@@ -14,6 +14,12 @@ app.use(express.static(path.join(__dirname, "public")));
 const PORT = process.env.PORT || 3000;
 
 // ===============================
+// ⏱ EVENT TIMER CONFIG
+// ===============================
+
+const ROUND_DURATION = 60 * 60 * 1000; // 1 hour in ms
+
+// ===============================
 // 🧠 GOD MODE STATE
 // ===============================
 
@@ -87,7 +93,8 @@ app.post("/login", (req, res) => {
 
     teams[team] = {
       storyId: storyIndex,
-      loginTime: getReadableTime(),
+      loginTime: Date.now(),
+      loginReadable: getReadableTime(),
       score: 0,
       penalty: 0,
       finishTime: null,
@@ -103,6 +110,33 @@ app.post("/login", (req, res) => {
   }
 
   res.json({ success: true });
+});
+
+// ===============================
+// ⏱ TEAM TIMER STATUS
+// ===============================
+
+app.get("/timer/:team",(req,res)=>{
+
+ const {team} = req.params;
+
+ if(!teams[team]) return res.json({expired:true});
+
+ const login = new Date(teams[team].loginTime).getTime();
+ const now = Date.now();
+
+ const elapsed = now - login;
+ const remaining = ROUND_DURATION - elapsed;
+
+ if(remaining <= 0){
+   return res.json({expired:true, remaining:0});
+ }
+
+ res.json({
+   expired:false,
+   remaining
+ });
+
 });
 
 // ===============================
@@ -166,8 +200,7 @@ app.get("/leaderboard", (req, res) => {
     const totalScore = data.score || (solvedCount * 25);
 
     // finish time = latest timestamp
-    const times = Object.values(data.discoveries).filter(v => v);
-    const finishTime = times.length ? Math.max(...times) : null;
+    const finishTime = data.finishTime || null;
 
     return {
       team,
@@ -243,7 +276,7 @@ ACCESS CONTROL LOG — PARTIAL RECOVERY
 
 NOTES:
 • Badge codes reference internal zones.
-• Network Map labels may help decode zones.
+• Network Map labels may help decode zones(locations).
 • Evidence may relate to previously discovered hardware.
 
 STATUS:
@@ -267,7 +300,7 @@ app.get("/location/:team/:node",(req,res)=>{
 
  if(node==="server"){
    output=`
-CLOUDZILLA INCIDENT REPORT — SERVER WING
+CLOUDZILLA INCIDENT REPORT — SERVER ROOM
 
 Rack temperature spikes were detected minutes before shutdown.
 Security logs show restricted access during late hours.
@@ -280,7 +313,7 @@ The CEO was last tracked inside the Server Room.
 
  else if(node==="conf"){
    output=`
-CLOUDZILLA INCIDENT REPORT — CONFERENCE AREA
+CLOUDZILLA INCIDENT REPORT — CONFERENCE ROOM
 
 Emergency meeting scheduled unexpectedly.
 Audio fragments captured raised voices.
@@ -306,7 +339,7 @@ The CEO was last tracked inside the Cafeteria.
 
  else if(node==="lot"){
    output=`
-CLOUDZILLA INCIDENT REPORT — PARKING ZONE
+CLOUDZILLA INCIDENT REPORT — PARKING LOT
 
 Vehicle sensors recorded sudden movement near the executive bay.
 Security lights activated briefly.
@@ -376,7 +409,7 @@ Nonsense.
 
 ██████████████████:
 You think you are so smart, hiding your messages in hex strings, and accessing them through the command line.
-I got one for you , if you are too stupid then you can even use a translator.
+I got one for you, if you are too stupid then you can even use a translator(note).
 
 6865785F7363616E
 
@@ -414,7 +447,7 @@ By the way, how dare you share that image of mine to the other employees? That�
 You think you are too smart, trying to hide it in a qr code and made it accessable through the command 'image'.
 
 ██████████████████:
-Haha, how stupid you look in that image. You look like godzilla.
+Haha, how stupid you look in that image. 
 
 CEO:
 Engineering should focus on delivery, not aesthetics.
