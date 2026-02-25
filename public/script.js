@@ -520,7 +520,7 @@ else if(cmd==="hex_scan"){
 }
 
 else if(cmd==="rambunctiousness"){
-    window.open("https://i.ytimg.com/vi/YzabKuRnESo/hqfault.jpg");
+    window.open("https://i.ytimg.com/vi/YzabKuRnESo/sddefault.jpg");
 }
 
 else if(cmd==="site"){
