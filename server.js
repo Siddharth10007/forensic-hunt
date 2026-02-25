@@ -122,23 +122,35 @@ app.get("/timer/:team",(req,res)=>{
 
  if(!teams[team]) return res.json({expired:true});
 
- const login = new Date(teams[team].loginTime).getTime();
+ // ⭐ CHECK IF TEAM ALREADY FINISHED
+ if(teams[team].finishTime){
+   return res.json({
+     expired:false,
+     finished:true,
+     remaining:0
+   });
+ }
+
+ const login = teams[team].loginTime; // numeric timestamp
  const now = Date.now();
 
  const elapsed = now - login;
  const remaining = ROUND_DURATION - elapsed;
 
  if(remaining <= 0){
-   return res.json({expired:true, remaining:0});
+   return res.json({
+     expired:true,
+     remaining:0
+   });
  }
 
  res.json({
    expired:false,
+   finished:false,
    remaining
  });
 
 });
-
 // ===============================
 // 🧩 SUBMIT ANSWER ROUTE
 // ===============================
@@ -262,10 +274,10 @@ const story = stories[teams[team].storyId];
 
 let code = "UNKNOWN";
 
-if(story.location.includes("Server")) code = "SR-02";
-else if(story.location.includes("Conference")) code = "CR-01";
-else if(story.location.includes("Cafeteria")) code = "CA-03";
-else if(story.location.includes("Parking")) code = "PL-07";
+if(story.location.includes("Server")) code = "SR";
+else if(story.location.includes("Conference")) code = "CR";
+else if(story.location.includes("Cafeteria")) code = "CA";
+else if(story.location.includes("Parking")) code = "PL";
 
 output=`
 ACCESS CONTROL LOG — PARTIAL RECOVERY
@@ -307,7 +319,7 @@ Security logs show restricted access during late hours.
 Witnesses reported heavy equipment noises near the main racks.
 
 Conclusion:
-The CEO was last tracked inside the Server Room.
+The CEO was last tracked inside the "Server Room".
 `;
  }
 
@@ -320,7 +332,7 @@ Audio fragments captured raised voices.
 Access logs indicate a confrontation occurred.
 
 Conclusion:
-The CEO was last tracked inside the Conference Room.
+The CEO was last tracked inside the "Conference Room".
 `;
  }
 
@@ -333,7 +345,7 @@ Security footage shows a sudden disruption near the tables.
 Unattended items were reported shortly before the incident.
 
 Conclusion:
-The CEO was last tracked inside the Cafeteria.
+The CEO was last tracked inside the "Cafeteria".
 `;
  }
 
@@ -346,7 +358,7 @@ Security lights activated briefly.
 Witnesses heard an argument near the parking area.
 
 Conclusion:
-The CEO was last tracked inside the Parking Lot.
+The CEO was last tracked inside the "Parking Lot".
 `;
  }
 
@@ -409,7 +421,7 @@ Nonsense.
 
 ██████████████████:
 You think you are so smart, hiding your messages in hex strings, and accessing them through the command line.
-I got one for you, if you are too stupid then you can even use a translator(note).
+I got one for you, if you are too stupid then you can even use a translator(recommended).
 
 6865785F7363616E
 
@@ -565,19 +577,13 @@ Uncover Weapon, Location, and Motive first.
  return res.type("text/plain").send(`
 IDENTITY TRACE — FINAL RECONSTRUCTION
 
-The murderer was exceptional when it came to decoding.
-Among all ciphers, morse code was their favourite.
+An artifact is recieved, maybe useful later.
 
-They were also known for perfectly redacting sensitive content…
-██████████████████
+He is playing with us, what a cheeky man. 
+Leaving a message for us? 
+His last mistake.
 
-Unfortunately for them, one mistake remained.
-Their identity was captured inside an old audio log recovered from company servers.
-
-Download the forensic artifact and analyse it carefully.
-
-Type:
-caught
+Type 'message'
 `);
 });
 

@@ -20,6 +20,15 @@ async function startEventTimer(){
       const res = await fetch(`/timer/${team}`);
       const data = await res.json();
 
+      // 🏁 STOP TIMER WHEN CASE FINISHED
+if(data.finished){
+  const timerEl = document.getElementById("eventTimer");
+  if(timerEl){
+    timerEl.textContent = "✅CASE CLOSED";
+  }
+  return; // stop countdown updates
+}
+
       if(data.expired){
         alert("⏰ Time Over — Investigation Closed.");
         localStorage.removeItem("team");
@@ -48,7 +57,7 @@ async function startEventTimer(){
   setInterval(update,1000);
 }
 
-console.log("Try command 'light'");
+console.log("Wow, you found the cheat hint! Congrates, Try command 'light'");
 
 startEventTimer();
 
@@ -71,6 +80,17 @@ function triggerShake(){
   setTimeout(()=>document.body.classList.remove("shake"),250);
 }
 
+const trigger = document.getElementById("menuTrigger");
+const popup = document.getElementById("menuPopup");
+const closeBtn = document.getElementById("closeMenu");
+
+trigger.addEventListener("click", () => {
+    popup.style.display = "block";
+});
+
+closeBtn.addEventListener("click", () => {
+    popup.style.display = "none";
+});
 
 // ======================
 // 🧭 CYBER RADAR ANIMATION
@@ -360,7 +380,8 @@ async function parseCommand(cmd){
 
   if(main==="help"){
     await typePrint(`
-COMMANDS (try to use them in order to recieve the most relevant evidence):
+COMMANDS (try to use them in order to recieve the most relevant evidence, 
+the submit command can be used at any time to verify your discoveries which are timed against other teams):
 
 scan network
 read accesslog
@@ -437,11 +458,21 @@ else if(cmd==="murderer"){
 // 🎧 FINAL AUDIO COMMAND
 // ======================
 
-else if(cmd==="caught"){
+else if(cmd==="catch"){
 
   try{
     window.open(`/caught/${team}`);
     print("Downloading recovered audio log...");
+    print(`
+The murderer was exceptional when it came to decoding.
+Among all ciphers, morse code was their favourite.
+
+They were also known for perfectly redacting sensitive content…
+██████████████████
+
+Unfortunately for them, one mistake remained.
+Their identity was captured inside an old audio log recovered from company servers.
+`)
   }catch(err){
     print("Audio log unavailable.");
     console.log(err);
@@ -489,7 +520,7 @@ else if(cmd==="hex_scan"){
 }
 
 else if(cmd==="rambunctiousness"){
-    window.open("https://i.ytimg.com/vi/YzabKuRnESo/hqdefault.jpg");
+    window.open("https://i.ytimg.com/vi/YzabKuRnESo/hqfault.jpg");
 }
 
 else if(cmd==="site"){
@@ -498,6 +529,10 @@ else if(cmd==="site"){
 
 else if(cmd==="light"){
   window.open("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSommEqfnspEYVrNdx1aGAoeMn7X92NCzYCnA&s"); 
+}
+
+else if(cmd==="message"){
+  window.open("https://youtu.be/BgBtSj9BY4Q"); 
 }
 
 else if(cmd==="25"){

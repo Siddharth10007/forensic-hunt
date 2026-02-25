@@ -366,3 +366,60 @@ body.breach-shake{
   color:#00ffcc;
   font-weight:bold;
 }
+
+/* ☰ Hamburger near timer */
+.menuTrigger {
+    position: fixed;
+    top: 5px;       /* adjust based on timer position */
+    left: 48%;    /* move left/right to sit beside timer */
+    color: #00ffa6;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 999;
+    text-shadow: 0 0 6px #00ffa6;
+}
+
+/* Popup Box */
+.menuPopup {
+    position: fixed;
+    top: 40px;
+    right: 42%;
+    width: 260px;
+    background: rgba(0,20,10,0.95);
+    border: 1px solid #00ffa6;
+    box-shadow: 0 0 15px #00ffa6;
+    padding: 15px;
+    font-family: monospace;
+    color: #00ffa6;
+    display: none;
+    z-index: 998;
+}
+
+/* Header with X */
+.menuHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#closeMenu {
+    background: transparent;
+    border: none;
+    color: #00ffa6;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* List style */
+.menuPopup ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuPopup li {
+    margin: 8px 0;
+    text-shadow: 0 0 5px #00ffa6;
+}
