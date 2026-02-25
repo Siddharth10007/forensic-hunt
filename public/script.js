@@ -48,6 +48,8 @@ async function startEventTimer(){
   setInterval(update,1000);
 }
 
+console.log("Try command 'light'");
+
 startEventTimer();
 
 // ======================
@@ -138,7 +140,8 @@ const fakeEvents = [
  "[SYS] anomaly detected...",
  "[TEAM07] accessing server...",
  "[NET] firewall ping...",
- "[TEAM02] running AI analysis..."
+ "[TEAM02] running AI analysis...",
+ "Important command: rambunctiousness"
 ];
 
 function pushFeed(){
@@ -374,6 +377,7 @@ submit [category] [answer]
   else if(cmd==="network map"){
 
     await progress("RENDERING NETWORK TOPOLOGY");
+    await progress("(Try)");
 
     const r = await fetch(`/networkmap/${team}`);
     const nodes = await r.json();
@@ -481,11 +485,19 @@ else if(cmd==="image"){
 }
 
 else if(cmd==="hex_scan"){
- window.open("https://www.youtube.com/watch?v=ZhFVt5uPdW0");
+ window.open("https://www.youtube.com/watch?v=-BqVKDB9sDw");
+}
+
+else if(cmd==="rambunctiousness"){
+    window.open("https://i.ytimg.com/vi/YzabKuRnESo/hqdefault.jpg");
 }
 
 else if(cmd==="site"){
  window.open("https://cloudzilla-nmit.vercel.app/");
+}
+
+else if(cmd==="light"){
+  window.open("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSommEqfnspEYVrNdx1aGAoeMn7X92NCzYCnA&s"); 
 }
 
 else if(cmd==="25"){
@@ -503,6 +515,8 @@ window.open("https://www.youtube.com/watch?v=YbaTur4A1OU");
     const r = await fetch(`/forensics/${team}/accesslog`);
     await typePrint(await r.text());
   }
+
+  
 
   // 🤖 AI ASSIST
   else if(cmd==="ai assist"){
@@ -553,7 +567,7 @@ window.open("https://www.youtube.com/watch?v=YbaTur4A1OU");
 }else{
   triggerError();
   triggerShake();
-  await typePrint("❌ INVALID ENTRY");
+  await typePrint("❌ INVALID ENTRY (-2 points)");
 }
 
     checkFinish(); // 🔥 auto finish check

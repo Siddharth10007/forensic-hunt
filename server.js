@@ -263,7 +263,7 @@ const story = stories[teams[team].storyId];
 let code = "UNKNOWN";
 
 if(story.location.includes("Server")) code = "SR-02";
-else if(story.location.includes("Conference")) code = "CF-01";
+else if(story.location.includes("Conference")) code = "CR-01";
 else if(story.location.includes("Cafeteria")) code = "CA-03";
 else if(story.location.includes("Parking")) code = "PL-07";
 
@@ -444,7 +444,7 @@ People are covering their screens with filters just to work comfortably.
 
 CEO:
 By the way, how dare you share that image of mine to the other employees? That’s a violation of privacy.
-You think you are too smart, trying to hide it in a qr code and made it accessable through the command 'image'.
+You think you are too smart, trying to hide it in a qr code and made it accessible through the command 'image'.
 
 ██████████████████:
 Haha, how stupid you look in that image. 
