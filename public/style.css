@@ -423,3 +423,54 @@ body.breach-shake{
     margin: 8px 0;
     text-shadow: 0 0 5px #00ffa6;
 }
+
+/* ============================= */
+/* 🎬 END GAME OVERLAY */
+/* ============================= */
+
+.end-overlay{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999;
+  overflow:hidden;
+}
+
+.book{
+  width:300px;
+  height:200px;
+  perspective:1000px;
+}
+
+.book-cover{
+  width:100%;
+  height:100%;
+  background:#111;
+  border:2px solid #22c55e;
+  transform-origin:left;
+  animation:closeBook 2.5s forwards;
+}
+
+@keyframes closeBook{
+  from { transform:rotateY(-160deg); }
+  to   { transform:rotateY(0deg); }
+}
+
+.credits{
+  position:absolute;
+  bottom:-100%;
+  text-align:center;
+  color:#22c55e;
+  font-family:monospace;
+  animation:rollCredits 15s linear forwards;
+  animation-delay:3s;
+}
+
+@keyframes rollCredits{
+  from { bottom:-100%; }
+  to   { bottom:110%; }
+}

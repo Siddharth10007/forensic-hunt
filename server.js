@@ -272,16 +272,29 @@ AI analysis unstable.
 
 const story = stories[teams[team].storyId];
 
-let code = "UNKNOWN";
+let code = 0;
 
-if(story.location.includes("Server")) code = "SR";
-else if(story.location.includes("Conference")) code = "CR";
-else if(story.location.includes("Cafeteria")) code = "CA";
-else if(story.location.includes("Parking")) code = "PL";
+if(story.location.includes("Server")) code = 1;
+else if(story.location.includes("Conference")) code = 2;
+else if(story.location.includes("Cafeteria")) code = 3;
+else if(story.location.includes("Parking")) code = 4;
 
 output=`
 ACCESS CONTROL LOG — PARTIAL RECOVERY
 
+02:00 System reboot initiated
+02:01 Kernel module loaded
+02:05 Login attempt detected
+02:10 Badge Entry → 3
+02:20 Badge Entry → 2
+02:30 USB device connected
+02:40 Badge Entry → 4
+02:45 Login attempt detected
+02:50 Badge Entry → 1
+03:00 Scheduled update applied
+03:10 Maintenance routine executed
+03:15 Access attempt detected
+03:20 Badge Entry → ${code}
 03:21 Badge Entry → ${code}
 03:22 Device ID anomaly detected
 03:23 Firewall anomaly detected
@@ -289,7 +302,6 @@ ACCESS CONTROL LOG — PARTIAL RECOVERY
 NOTES:
 • Badge codes reference internal zones.
 • Network Map labels may help decode zones(locations).
-• Evidence may relate to previously discovered hardware.
 
 STATUS:
 Data integrity compromised.
@@ -312,53 +324,49 @@ app.get("/location/:team/:node",(req,res)=>{
 
  if(node==="server"){
    output=`
-CLOUDZILLA INCIDENT REPORT — SERVER ROOM
+CLOUDZILLA INCIDENT REPORT — "SERVER ROOM"
 
 Rack temperature spikes were detected minutes before shutdown.
 Security logs show restricted access during late hours.
 Witnesses reported heavy equipment noises near the main racks.
+Location ID: 1
 
-Conclusion:
-The CEO was last tracked inside the "Server Room".
 `;
  }
 
  else if(node==="conf"){
    output=`
-CLOUDZILLA INCIDENT REPORT — CONFERENCE ROOM
+CLOUDZILLA INCIDENT REPORT — "CONFERENCE ROOM"
 
 Emergency meeting scheduled unexpectedly.
 Audio fragments captured raised voices.
 Access logs indicate a confrontation occurred.
+Location ID: 2
 
-Conclusion:
-The CEO was last tracked inside the "Conference Room".
 `;
  }
 
  else if(node==="cafe"){
    output=`
-CLOUDZILLA INCIDENT REPORT — CAFETERIA
+CLOUDZILLA INCIDENT REPORT — "CAFETERIA"
 
 Multiple staff gathered during lunch hours.
 Security footage shows a sudden disruption near the tables.
 Unattended items were reported shortly before the incident.
+Location ID: 3
 
-Conclusion:
-The CEO was last tracked inside the "Cafeteria".
 `;
  }
 
  else if(node==="lot"){
    output=`
-CLOUDZILLA INCIDENT REPORT — PARKING LOT
+CLOUDZILLA INCIDENT REPORT — "PARKING LOT"
 
 Vehicle sensors recorded sudden movement near the executive bay.
 Security lights activated briefly.
 Witnesses heard an argument near the parking area.
+Location ID: 4
 
-Conclusion:
-The CEO was last tracked inside the "Parking Lot".
 `;
  }
 
