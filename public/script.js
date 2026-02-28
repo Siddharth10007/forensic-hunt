@@ -657,7 +657,7 @@ submit [category] [answer]
   else if(["server","conf","cafe","lot","unknown"].includes(cmd)){
 
  if(cmd==="unknown"){
-   window.open("https://www.youtube.com/watch?v=fC7oUOUEEi4");
+   window.open("https://www.youtube.com/watch?v=-BqVKDB9sDw");
    return;
  }
 
@@ -3288,7 +3288,7 @@ else if(cmd==="image"){
 
   
 else if(cmd==="hex_scan"){
- window.open("https://www.youtube.com/watch?v=-BqVKDB9sDw");
+ window.open("https://www.youtube.com/watch?v=fC7oUOUEEi4");
 }
 
 
